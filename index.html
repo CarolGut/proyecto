@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+<head> 
+<meta charset="ISO-8859-1">
+<title> ATI: Apache HTTP y PHP </title>
+</head>
+
+<body>
+
+	<div id="tabla"> </div>
+  <div id="lista"> </div>
+	<button onclick="tabla();"> Tabla </button>  <button onclick="lista();"> Lista </button>
+  
+
+</body>
+
+<script type="text/javascript">
+	
+function tabla() {
+  // solo carga el string que le envio el servidor.
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    	var respuesta = this.responseText;
+     document.getElementById("tabla").innerHTML = respuesta;
+    }
+  };
+  xhttp.open("GET", "http://localhost/L5/lista.php/?table=true", true);
+  xhttp.send();
+} 
+
+
+function lista() {
+  // toma una lista de usuarios (json) del servidor y crea una tabla a partir de ella.
+  var xhttp = new XMLHttpRequest();
+  var lista = '<table style="background-color: skyblue;"> <tr> <th>Nombre</th> <th>Apellido</th></tr> ';
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var respuesta = JSON.parse(this.responseText);
+
+      for (var i = 0; i < respuesta.length; i++) {
+        lista = lista + " <tr> <td>" + respuesta[i].nombre +"</td>"+ "<td>" + respuesta[i].apellido+"</td> </tr>";
+      }
+
+  lista = lista + " </table>";
+
+     document.getElementById("lista").innerHTML = lista;
+    }
+  };
+  xhttp.open("GET", "http://localhost/L5/lista.php", true);
+  xhttp.send();
+}
+
+</script>
+</html>
